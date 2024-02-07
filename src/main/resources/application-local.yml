@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/h2-db/hong-tabulator
+    username: sa
+    password: 1234
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+
+logging.level:
+  org.hibernate.SQL: debug
+
+
+hong:
+  img:
+    path: 'D:\hongTabulatorFile\'
+  ckImg:
+    pattern: '/ckImage/**'
+    path: 'D:/hongTabulatorFile/ckImage/'
