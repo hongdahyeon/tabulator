@@ -54,6 +54,18 @@ public class HongPostServiceImpl implements HongPostService {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public Integer deleteSeveral(List<Long> ids) {
+        int cnt = 0;
+        for(Long id : ids) {
+            HongPost hongPost = hongPostRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("there is no post"));
+            hongPost.deletePost();
+            cnt = cnt + 1;
+        }
+        return cnt;
+    }
+
+    @Override
     public List<HongPostVO> list() {
         List<HongPost> hongPosts = hongPostRepository.findAllByDelYnIs("N");
         return hongPosts.stream().map(HongPostVO::new).toList();

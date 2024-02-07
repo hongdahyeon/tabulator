@@ -17,8 +17,21 @@
             <div id="ckEditor-table">
                 Tabulator 사용에 대한 예시 프로젝트입니다.
                 <div class="card-body" style="margin-top: 10px">
-                    * 게시글 리스트 화면 이동
-                    <button type="button" class="btn btn-outline-info" id="go-btn">리스트화면 <br/> 이동</button>
+                    (1) 게시글 리스트 화면 이동 - 1
+                    <button type="button" class="btn btn-outline-info" style="margin-left: 20px" id="go-btn1">리스트화면 이동1</button>
+                    <div>
+                        <span style="color: red">* 테뷸레이터 이용: rowClick, formatter</span>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="card-body" style="margin-top: 10px">
+                    (2) 게시글 리스트 화면 이동 - 2
+                    <button type="button" class="btn btn-outline-info" style="margin-left: 20px" id="go-btn2">리스트화면 이동2</button>
+                    <div>
+                        <span style="color: red">* 테뷸레이터 이용: selectable, formatter, local-data</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -28,6 +41,7 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        $("#go-btn").on("click", () => window.location.href = '/post/list')
+        $("#go-btn1").on("click", () => window.location.href = '/post/list1')
+        $("#go-btn2").on("click", () => window.location.href = '/post/list2')
     </script>
 </th:block>

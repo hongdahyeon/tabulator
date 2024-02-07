@@ -8,11 +8,12 @@
         <div class="card-header" style="margin-bottom: 10px">
             <div class="card-text d-flex justify-content-between">
                 <div class="text-start">
-                    <h3>Tabulator</h3>
+                    <h3>Tabulator 2</h3>
                 </div>
                 <div class="text-end">
                     <button type="button" class="btn btn-outline-secondary" id="main-btn">메인화면이동</button>
                     <button type="button" class="btn btn-outline-info" id="new-btn">글작성하기</button>
+                    <button type="button" class="btn btn-outline-danger" id="del-btn">삭제하기</button>
                 </div>
             </div>
         </div>
@@ -24,19 +25,28 @@
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        const table = new Table("tabulator-table")
+        const table = new Table("tabulator-table", false)
+        const list = /*[[${list}]]*/ []
 
         table
-            .get('/api/post')
+            .setData(list)
+            .selectable()
+            .get('/api/post-answer')
             .add(new Column("index").title("#").width("15%").center())
-            .add(new Column("title").title("제목").width("30%").left().formatter(function(cell) {
-                const rowData = cell.getData()
-                return `<b>${rowData['title']}</b>`
+            .add(new Column("title").title("제목").width("30%"))
+            .add(new Column("answers").title("답변").width("20%").center().formatter(function (cell) {
+                return `<b>${cell.getData().answers.length}개</b>`
             }))
             .init()
 
-        table.rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)
         $("#new-btn").on('click', () => window.location.href = '/post/new')
         $("#main-btn").on('click', () => window.location.href = '/')
+        $("#del-btn").on('click', function (e) {
+            const queryString = '?' + table.getSelectedRows().map((item) => 'ids=' + item.id).join('&');
+            Http.delete(`/api/posts${queryString}`).then((res) => {
+                if(res['httpStatus'] === 200) Util.alert(res.message).then(() => window.location.href = `/post/list2`)
+            })
+        })
+
     </script>
 </th:block>

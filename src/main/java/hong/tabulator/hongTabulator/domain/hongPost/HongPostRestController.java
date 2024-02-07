@@ -30,6 +30,13 @@ public class HongPostRestController {
         return Response.ok("해당 게시글이 삭제되었습니다.");
     }
 
+    @DeleteMapping("/posts")
+    public Response deleteSeveral(@RequestParam(name = "ids", required = true) List<Long> ids) {
+        Integer cnt = hongPostService.deleteSeveral(ids);
+        String message = "총 " + cnt + "개의 게시글이 삭제되었습니다.";
+        return Response.ok(message);
+    }
+
     @GetMapping("/post")
     public Response list() {
         List<HongPostVO> list = hongPostService.list();

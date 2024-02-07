@@ -14,9 +14,15 @@ public class HongPostController {
 
     private final HongPostService service;
 
-    @GetMapping("/list")
-    public String list() {
-        return "/post/index";
+    @GetMapping("/list1")
+    public String list1() {
+        return "/post/index1";
+    }
+
+    @GetMapping("/list2")
+    public String list2(Model model) {
+        model.addAttribute("list", service.listWithAnswer());
+        return "/post/index2";
     }
 
     @GetMapping("/new")
@@ -26,7 +32,6 @@ public class HongPostController {
 
     @GetMapping("/view/{id}")
     public String view(@PathVariable(name = "id") Long id, Model model) {
-//        model.addAttribute("post", service.view(id));
         model.addAttribute("post", service.viewWithAnswer(id));
         return "/post/view";
     }

@@ -15,6 +15,8 @@ public interface HongPostService {
 
     void delete(Long id);
 
+    Integer deleteSeveral(List<Long> ids);
+
     List<HongPostVO> list();
 
     List<HongPostWithAnswerVO> listWithAnswer();
