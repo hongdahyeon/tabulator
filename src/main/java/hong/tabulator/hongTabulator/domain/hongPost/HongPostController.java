@@ -26,7 +26,8 @@ public class HongPostController {
 
     @GetMapping("/view/{id}")
     public String view(@PathVariable(name = "id") Long id, Model model) {
-        model.addAttribute("post", service.view(id));
+//        model.addAttribute("post", service.view(id));
+        model.addAttribute("post", service.viewWithAnswer(id));
         return "/post/view";
     }
 

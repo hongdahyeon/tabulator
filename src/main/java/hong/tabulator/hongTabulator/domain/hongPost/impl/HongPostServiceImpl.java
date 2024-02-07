@@ -1,10 +1,13 @@
 package hong.tabulator.hongTabulator.domain.hongPost.impl;
 
+import hong.tabulator.hongTabulator.domain.hongAnswer.HongAnswerService;
+import hong.tabulator.hongTabulator.domain.hongAnswer.vo.HongAnswerVO;
 import hong.tabulator.hongTabulator.domain.hongPost.HongPost;
 import hong.tabulator.hongTabulator.domain.hongPost.HongPostRepository;
 import hong.tabulator.hongTabulator.domain.hongPost.HongPostService;
 import hong.tabulator.hongTabulator.domain.hongPost.dto.HongPostDTO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostVO;
+import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAnswerVO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +33,7 @@ public class HongPostServiceImpl implements HongPostService {
     private String fileRoot;
 
     private final HongPostRepository hongPostRepository;
+    private final HongAnswerService hongAnswerService;
 
     @Override
     @Transactional(readOnly = false)
@@ -56,9 +60,25 @@ public class HongPostServiceImpl implements HongPostService {
     }
 
     @Override
+    public List<HongPostWithAnswerVO> listWithAnswer() {
+        List<HongPost> hongPosts = hongPostRepository.findAllByDelYnIs("N");
+        return hongPosts.stream().map(hongPost -> {
+            List<HongAnswerVO> answers = hongAnswerService.list(hongPost.getId());
+            return new HongPostWithAnswerVO(hongPost, answers);
+        }).toList();
+    }
+
+    @Override
     public HongPostVO view(Long id) {
         HongPost hongPost = hongPostRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("there is no post"));
         return new HongPostVO(hongPost);
+    }
+
+    @Override
+    public HongPostWithAnswerVO viewWithAnswer(Long id) {
+        HongPost hongPost = hongPostRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("there is no post"));
+        List<HongAnswerVO> answers = hongAnswerService.list(id);
+        return new HongPostWithAnswerVO(hongPost, answers);
     }
 
     @Override

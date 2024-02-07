@@ -3,6 +3,7 @@ package hong.tabulator.hongTabulator.domain.hongPost;
 
 import hong.tabulator.hongTabulator.domain.hongPost.dto.HongPostDTO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostVO;
+import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAnswerVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,7 +17,11 @@ public interface HongPostService {
 
     List<HongPostVO> list();
 
+    List<HongPostWithAnswerVO> listWithAnswer();
+
     HongPostVO view(Long id);
+
+    HongPostWithAnswerVO viewWithAnswer(Long id);
 
     void edit(Long id, HongPostDTO dto);
 

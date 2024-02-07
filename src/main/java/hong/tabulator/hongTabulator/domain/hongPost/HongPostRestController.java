@@ -2,6 +2,7 @@ package hong.tabulator.hongTabulator.domain.hongPost;
 
 import hong.tabulator.hongTabulator.domain.hongPost.dto.HongPostDTO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostVO;
+import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAnswerVO;
 import hong.tabulator.hongTabulator.global.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,12 @@ public class HongPostRestController {
     @GetMapping("/post")
     public Response list() {
         List<HongPostVO> list = hongPostService.list();
+        return Response.ok(list);
+    }
+
+    @GetMapping("/post-answer")
+    public Response listWithAnswer(){
+        List<HongPostWithAnswerVO> list = hongPostService.listWithAnswer();
         return Response.ok(list);
     }
 

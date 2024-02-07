@@ -5,7 +5,7 @@
 
 <th:block layout:fragment="head">
   <style>
-    .ck-editor__editable { height: 600px; }
+    .ck-editor__editable { height: 400px; }
     .ck-content { font-size: 18px; }
   </style>
 </th:block>
@@ -24,6 +24,7 @@
         </div>
       </div>
     </div>
+
     <div class="card-body">
       <div class="mb-3 mt-3" style="margin-bottom: 10px;">
         <label for="title">제목</label>
@@ -36,8 +37,49 @@
         <label for="content">내용</label>
         <div id="content" name="content" class="ckeditor" style="min-height: 300px"></div>
       </div>
-
     </div>
+
+    <div class="card-body" id="answer-body">
+      <hr class="hr" />
+
+      <div class="mb-3 mt-3" style="margin-bottom: 10px;">
+        <div class="card-text d-flex justify-content-between">
+          <div class="text-start">
+            <h5>답변</h5>
+          </div>
+        </div>
+
+        <th:block th:if="${#lists.size(post.answers) == 0}">
+          <div class="text-center" style="margin-top: 10px"> <h6>답변이 없습니다.</h6> </div>
+        </th:block>
+        <th:block th:unless="${#lists.size(post.answers) == 0}">
+          <th:block th:each="answer, answerSata : ${post.answers}">
+            <div class="card" style="margin-top: 10px">
+              <div class="card-text d-flex justify-content-between">
+                <div class="text-start"></div>
+                <div class="text-end">
+                  <button type="button" class="btn btn-outline-info" id="answer-edit-btn" th:data-num="${answer.id}">수정</button>
+                  <button type="button" class="btn btn-outline-warning" id="answer-delete-btn" th:data-num="${answer.id}">삭제</button>
+                </div>
+              </div>
+              <textarea th:utext="${answer.content}" th:id="|content-${answer.id}|" style="height: 100px" />
+            </div>
+          </th:block>
+        </th:block>
+
+        <hr class="hr" />
+        <div class="card-body">
+            <span>답변 작성하기</span>
+          <textarea class="form-control" id="save-answer" name="answer" style="margin-top: 10px; height: 100px;"></textarea>
+          <div class="text-end" style="margin-top: 10px">
+            <button type="button" class="btn btn-outline-primary" id="save-answer-btn">저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
   </div>
 
 </th:block>
@@ -58,6 +100,32 @@
               if (res['httpStatus'] === 200) Util.alert(res.message).then(() => window.location.href = `/post/list`)
             })
           }
+        })
+      })
+
+      /* 댓글 저장 이벤트 */
+      $("#save-answer-btn").on("click", function(e){
+        const content = $("#save-answer").val()
+        const postId = post['id']
+        Http.post(`/api/answer`, { content, postId }).then((res) => {
+          if(res['httpStatus'] === 200) Util.alert("답변이 등록되었습니다.").then(() => window.location.href = `/post/view/${post['id']}`)
+        })
+      })
+
+      /* 댓글 수정 이벤트 */
+      $("#answer-edit-btn").on('click', function(e) {
+        const id = $(this).attr('data-num')
+        const content = $(`#content-${id}`).val()
+        Http.put(`/api/answer/${id}`, { content }).then((res) => {
+          if(res['httpStatus'] === 200) Util.alert("답변이 수정되었습니다.").then(() => window.location.href = `/post/view/${post['id']}`)
+        })
+      })
+
+      /* 댓글 삭제 이벤트 */
+      $("#answer-delete-btn").on('click', function (e) {
+        const id = $(this).attr('data-num')
+        Http.delete(`/api/answer/${id}`).then((res) => {
+          if(res['httpStatus'] === 200) Util.alert("답변이 삭제되었습니다.").then(() => window.location.href = `/post/view/${post['id']}`)
         })
       })
 

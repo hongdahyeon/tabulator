@@ -29,7 +29,10 @@
         table
             .get('/api/post')
             .add(new Column("index").title("#").width("15%").center())
-            .add(new Column("title").title("제목").width("30%").left())
+            .add(new Column("title").title("제목").width("30%").left().formatter(function(cell) {
+                const rowData = cell.getData()
+                return `<b>${rowData['title']}</b>`
+            }))
             .init()
 
         table.rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)
