@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+
+<th:block layout:fragment="content">
+    <div class="mt-3">
+        <div class="card-header" style="margin-bottom: 10px">
+            <div class="card-text d-flex justify-content-between">
+                <div class="text-start">
+                    <h3>Tabulator 4</h3>
+                </div>
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-secondary" id="main-btn">메인화면이동</button>
+                    <button type="button" class="btn btn-outline-danger" id="del-btn">테이블 초기화</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="tabulator-table"></div>
+        </div>
+
+    </div>
+</th:block>
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        const table = new Table("tabulator-table", false)
+        let list = [{title: "제목", name: "이름"}]
+
+        table
+            .setPlaceholder("데이터가 0건입니다.")
+            .setData(list)
+            .resizeable()
+            .changeLayout("fitDataStretch")
+            .add(new Column("index").title("#").width("15%").center())
+            .add(new Column("title").title("제목").width("30%").left())
+            .add(new Column("delYn").title("삭제여부").width("20%").center().formatter(function(cell) {
+                const rowData = cell.getData()
+                if(rowData['delYn'] === 'Y') return `<span style="color: red">삭제됨</span>`
+                else return `<span style="color: blue">삭제안됨</span>`
+            }))
+            .add(new Column("name").title("이름").width("20%").left())
+            .afterComplete(() => {
+                const resize = document.querySelectorAll(".tabulator-col-resize-handle")
+                resize.forEach((item) => item.style.backgroundColor = "black")
+            })
+            .init()
+
+
+        $("#main-btn").on('click', () => window.location.href = '/')
+        $("#del-btn").on('click', () => table.submit([]))
+
+    </script>
+</th:block>
