@@ -33,7 +33,6 @@
         table
             .setData(list)
             .selectable()
-            .get('/api/post-answer')
             .add(new Column("index").title("#").width("15%").center())
             .add(new Column("title").title("제목").width("30%"))
             .add(new Column("answers").title("답변").width("20%").center().formatter(function (cell) {
