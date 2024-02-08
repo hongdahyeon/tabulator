@@ -97,7 +97,7 @@
         Util.confirm("삭제 하시겠습니까?").then((isOk) => {
           if(isOk) {
             Http.delete(`/api/post/${post['id']}`).then((res) => {
-              if (res['httpStatus'] === 200) Util.alert(res.message).then(() => window.location.href = `/post/list1`)
+              if (res['httpStatus'] === 200) Util.alert(res.message).then(() => window.location.href = `/`)
             })
           }
         })
@@ -130,7 +130,7 @@
       })
 
       /* 목록버튼 클릭 이벤트 */
-      $("#list-btn").on("click", () => window.location.href = `/post/list1`)
+      $("#list-btn").on("click", () => window.location.href = `/`)
       $("#edit-btn").on("click", () => window.location.href = `/post/edit/${post['id']}`)
     });
 

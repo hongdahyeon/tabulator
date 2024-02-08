@@ -3,7 +3,6 @@ class Table {
     constructor(id, useUrl = true) {
         this._id = id
         this._useUrl = useUrl
-        this._subTable = false                              // 서브 테이블 여부
         this._layout = "fitDataFill"                        // 테이블 레이아웃
         this._placeholder = "검색결과가 존재하지 않습니다."      // 데이터 0건일 경우
         this._minHeight = 50
@@ -50,14 +49,6 @@ class Table {
         return this
     }
 
-   /*
-    * select row to deselect
-    */
-    deselectAll(){
-        this._table.deselectRow();
-        this._selectedRows = []
-    }
-
     /*
     * @param: url
     */
@@ -87,14 +78,6 @@ class Table {
     */
     setData(data = []){
         this._data = data
-        return this
-    }
-
-    /*
-    * make subTable
-    */
-    subTable(){
-        this._subTable = true
         return this
     }
 
@@ -147,6 +130,21 @@ class Table {
     headerBottom() {
         this._columnHeaderVertAlign = "bottom"
         return this
+    }
+
+    /*
+    * deselect all row
+    */
+    deSelectAll(){
+        this._table.deselectRow();
+        this._selectedRows = []
+    }
+
+    /*
+    * select all row
+    */
+    selectAll(){
+        this._table.selectRow()
     }
 
     /*
@@ -233,7 +231,7 @@ class Table {
             option['rowFormatter'] = this._rowFormatter
         }
 
-        const dom = (!this._subTable) ? `#${this._id}` : this._id
+        const dom = `#${this._id}`
         const table = new Tabulator(dom, option)
 
         // if clicking row not null

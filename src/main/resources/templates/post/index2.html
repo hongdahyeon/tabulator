@@ -14,6 +14,8 @@
                     <button type="button" class="btn btn-outline-secondary" id="main-btn">메인화면이동</button>
                     <button type="button" class="btn btn-outline-info" id="new-btn">글작성하기</button>
                     <button type="button" class="btn btn-outline-danger" id="del-btn">삭제하기</button>
+                    <button type="button" class="btn btn-outline-warning" id="all-btn-chk">전체선택</button>
+                    <button type="button" class="btn btn-outline-dark" id="all-btn-nonChk">전체선택해제</button>
                 </div>
             </div>
         </div>
@@ -39,6 +41,8 @@
             }))
             .init()
 
+        $("#all-btn-chk").on('click', () => table.selectAll())
+        $("#all-btn-nonChk").on('click', () => table.deSelectAll())
         $("#new-btn").on('click', () => window.location.href = '/post/new')
         $("#main-btn").on('click', () => window.location.href = '/')
         $("#del-btn").on('click', function (e) {
