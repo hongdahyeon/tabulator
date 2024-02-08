@@ -60,7 +60,7 @@
                 if(rowData['delYn'] === 'Y') return `<span style="color: red">삭제됨</span>`
                 else return `<span style="color: blue">삭제안됨</span>`
             }))
-            .add(new Column("name").title("답변").width("20%").left())
+            .add(new Column("name").title("이름").width("20%").left())
             .rowFormatter((row) => {
                 console.log('row: ', row.getData())                     // 해당 row 데이터 가져오기
                 console.log('row: ', row.getElement())                  // 해당 row element 가져오기
