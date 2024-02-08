@@ -33,9 +33,9 @@
                 const rowData = cell.getData()
                 return `<b>${rowData['title']}</b>`
             }))
+            .rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)
             .init()
 
-        table.rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)
         $("#new-btn").on('click', () => window.location.href = '/post/new')
         $("#main-btn").on('click', () => window.location.href = '/')
     </script>

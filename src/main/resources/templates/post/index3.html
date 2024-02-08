@@ -19,41 +19,65 @@
         <div class="card-body">
             <div id="tabulator-table"></div>
         </div>
+
+        <hr class="hr" />
+
+        <div class="card-body">
+            <div id="form-div">
+                <div class="card-body">
+                    <div class="mb-3 mt-3" style="margin-bottom: 10px;">
+                        <label for="title">제목</label>
+                        <input type="text" class="form-control" id="title" name="title" required/>
+                    </div>
+
+                    <div class="mb-3 mt-3" style="margin-bottom: 10px;">
+                        <label for="title">이름</label>
+                        <input type="text" class="form-control" id="name" name="name" required/>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-outline-info" id="add-btn">추가</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </th:block>
 
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         const table = new Table("tabulator-table", false)
-        let list = [{index: 0, title: "제목", answers: []}]
+        let list = [{title: "제목", name: "이름"}]
 
         table
             .setPlaceholder("데이터가 0건입니다.")
             .setData(list)
             .add(new Column("index").title("#").width("15%").center())
-            .add(new Column("title").title("제목").width("30%"))
-            .add(new Column("answers").title("답변").width("20%").center().formatter(function (cell) {
-                return `<b>${cell.getData().answers.length}개</b>`
-            }))
+            .add(new Column("title").title("제목").width("30%").left())
+            .add(new Column("name").title("답변").width("20%").left())
             .rowFormatter((row) => {
                 console.log('row: ', row.getData())                     // 해당 row 데이터 가져오기
                 console.log('row: ', row.getElement())                  // 해당 row element 가져오기
                 row.getElement().style.backgroundColor = "#e0b4b4";     // -> 다음과 같이 customizing 가능
             })
+            .afterComplete(() => {
+                console.log("table is completely drawn !")
+            })
+            .rowClick((data, row) => {
+                console.log("table row is clicked")
+                console.log("* data: ", data)
+                console.log("* row: ", row)
+            })
             .init()
-
-        table.afterComplete(() => {
-            console.log("table is completely drawn !")
-        })
-
-        table.rowClick((data, row) => {
-            console.log("table row is clicked")
-            console.log("* data: ", data)
-            console.log("* row: ", row)
-        })
 
         $("#main-btn").on('click', () => window.location.href = '/')
         $("#del-btn").on('click', () => table.submit([]))
+        $("#add-btn").on('click', () => {
+            const title = $("#title"); const name = $("#name")
+            table.addData({title: title.val(), name: name.val()})
+            title.val(""); name.val("")
+        })
 
     </script>
 </th:block>

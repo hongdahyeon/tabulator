@@ -12,27 +12,23 @@ class Table {
         this._useUrl = useUrl
         this._layout = "fitDataFill"                        // 테이블 레이아웃
         this._placeholder = "검색결과가 존재하지 않습니다."      // 데이터 0건일 경우
-        this._minHeight = 50
+        this._minHeight = 300
         this._maxHeight = 300
         this._columnHeaderVertAlign = ""                    // align header contents to bottom of cell
         this._columns = []
         this._url = ''
         this._data = []
         this._selectedRows = []
+
+        this._useIndex = true
     }
 
     _initTableRendering(){
         this._resizeable = false                            // 테이블 row resize 가능 여부
         this._rowFormatter = null                           // 테이블 각 row formatter
-
-        this._rowClickAble = true                           // 테이블 각 row click able
         this._rowClick = null                               // 테이블 각 row click function
-
         this._selectable = false                            // 테이블 row select 가능 여부
-
-        this._afterCompleteAble = true                      // 테이블 draw after able
         this._afterComplete = null                          // 테이블 draw after
-
         this._checkbox = false
     }
 
@@ -54,14 +50,26 @@ class Table {
         if(this._useUrl) {
             Http.get(`${this._url}`).then((res) => {
                 if (res['httpStatus'] === 200) {
-                    const data = res.message.map((item, index) => ({...item, index: index + 1}))
+                    const data = this._setDataNum(res.message)
                     this._table.replaceData(data)
                 }
             })
         } else {
-            this._data = localData
-            this._table.replaceData(localData)
+            this._data = this._setDataNum(localData)
+            this._table.replaceData(this._data)
         }
+    }
+
+    /*
+    * table add data
+    * use when useUrl is false
+    */
+    addData(data = {}){
+        if(!this._useUrl) {
+            this._data.push(data)
+            this._data = this._setDataNum(this._data)
+            this._table.replaceData(this._data)
+        } else console.error("useUrl이 false인 경우에만 사용 가능합니다.")
     }
 
     /*
@@ -129,17 +137,7 @@ class Table {
     * rowClick: rowClick use
     */
     rowClick(callback) {
-        if(this._rowClickAble) this._rowClick = callback
-        else console.error("행 클릭 가능 여부가 false입니다.")
-        return this
-    }
-
-    /*
-    * rowClickAble change
-    * - default: true
-    * */
-    disAbleRowClickAble(){
-        this._rowClickAble = false
+        this._rowClick = callback
         return this
     }
 
@@ -156,17 +154,7 @@ class Table {
     * afterComplete: settings after draw table
     */
     afterComplete(callback) {
-        if(this._afterCompleteAble) this._afterComplete = callback
-        else console.error("afterComplete 여부가 false이기 때문에 afterComplete사용이 불가능합니다.")
-        return this
-    }
-
-    /*
-    * afterCompleteAble change
-    * - default: true
-    * */
-    disableAfterComplete(){
-        this._afterCompleteAble = false
+        this._afterComplete = callback
         return this
     }
 
@@ -220,6 +208,23 @@ class Table {
         return this
     }
 
+
+    /*
+    * set data index true / false
+    */
+    notUseIndex(){
+        this._useIndex = false
+        return this
+    }
+
+    /*
+    * set data index
+    */
+    _setDataNum(data = []){
+        if(this._useIndex) return data.map((item, index) => ({...item, index: index + 1}))
+        else return data
+    }
+
     /*
     * draw table
     * if useUrl is true  ) init table by url
@@ -227,13 +232,12 @@ class Table {
     */
     init() {
         if(!this._useUrl) {
-            const data = this._data.map((item, index) => ({ ...item, index: index + 1 }))
+            const data = this._setDataNum(this._data)
             this._initOptions(data)
         }else {
             Http.get(`${this._url}`).then((res) => {
                 if (res['httpStatus'] === 200) {
-                    // 1. data with index
-                    const data = res.message.map((item, index) => ({...item, index: index + 1}))
+                    const data = this._setDataNum(res.message)
                     this._initOptions(data)
                 }
             })
@@ -290,7 +294,7 @@ class Table {
         const table = new Tabulator(dom, option)
 
         // if clicking row not null
-        if(this._rowClickAble) {
+        if(this._rowClick) {
             table.on('rowClick', (e, row) => {
                 if(!e.target.classList.contains("tabulator-checkbox") && !e.target.classList.contains("select")) {
                     this._rowClick(row.getData(), row._row)
@@ -299,7 +303,7 @@ class Table {
         }
 
         // if after complete not null
-        if(this._afterCompleteAble) {
+        if(this._afterComplete) {
             table.on("renderComplete", () => this._afterComplete())
         }
 
