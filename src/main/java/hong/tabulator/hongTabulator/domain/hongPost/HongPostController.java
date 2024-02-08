@@ -25,6 +25,11 @@ public class HongPostController {
         return "/post/index2";
     }
 
+    @GetMapping("/list3")
+    public String list3() {
+        return "/post/index3";
+    }
+
     @GetMapping("/new")
     public String save() {
         return "/post/new";

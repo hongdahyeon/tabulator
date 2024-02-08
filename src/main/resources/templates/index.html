@@ -33,6 +33,17 @@
                         <span style="color: red">* 테뷸레이터 이용: selectable, formatter, local-data, selectAll, deSelectAll</span>
                     </div>
                 </div>
+
+                <hr />
+
+                <div class="card-body" style="margin-top: 10px">
+                    (3) 게시글 리스트 화면 이동 - 3
+                    <button type="button" class="btn btn-outline-info" style="margin-left: 20px; margin-bottom: 10px" id="go-btn3">리스트화면 이동3</button>
+                    <div>
+                        <span style="color: red">* 테뷸레이터 이용: formatter, setPlaceholder, rowFormatter, local-data, afterComplete, rowClick, local-data submit</span>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -43,5 +54,6 @@
     <script th:inline="javascript">
         $("#go-btn1").on("click", () => window.location.href = '/post/list1')
         $("#go-btn2").on("click", () => window.location.href = '/post/list2')
+        $("#go-btn3").on("click", () => window.location.href = '/post/list3')
     </script>
 </th:block>

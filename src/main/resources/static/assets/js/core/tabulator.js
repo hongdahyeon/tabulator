@@ -1,6 +1,13 @@
 class Table {
 
     constructor(id, useUrl = true) {
+        this._initBaseVariables(id, useUrl)
+        this._initPaginations()
+        this._initTableRendering()
+        this._table = null
+    }
+
+    _initBaseVariables(id, useUrl){
         this._id = id
         this._useUrl = useUrl
         this._layout = "fitDataFill"                        // 테이블 레이아웃
@@ -8,37 +15,53 @@ class Table {
         this._minHeight = 50
         this._maxHeight = 300
         this._columnHeaderVertAlign = ""                    // align header contents to bottom of cell
+        this._columns = []
+        this._url = ''
+        this._data = []
+        this._selectedRows = []
+    }
+
+    _initTableRendering(){
         this._resizeable = false                            // 테이블 row resize 가능 여부
         this._rowFormatter = null                           // 테이블 각 row formatter
-        this._rowClick = null                               // 테이블 각 row click function
-        this._selectable = false                            // 테이블 row select 가능 여부
-        this._afterComplete = null                          // 테이블 draw after
-        this._checkbox = false
 
+        this._rowClickAble = true                           // 테이블 각 row click able
+        this._rowClick = null                               // 테이블 각 row click function
+
+        this._selectable = false                            // 테이블 row select 가능 여부
+
+        this._afterCompleteAble = true                      // 테이블 draw after able
+        this._afterComplete = null                          // 테이블 draw after
+
+        this._checkbox = false
+    }
+
+    _initPaginations(){
         this._pagination = false
         this._paging = 'local'
         this._paginationSize = 6
         this._paginationSizeSelector = [3, 6, 8, 10]
         this._movableColumns = true
         this._paginationCounter = "rows"
-
-        this._columns = []
-        this._url = ''
-        this._data = []
-        this._selectedRows = []
-        this._table = null
     }
 
    /*
     * table data reload
+    * if useUrl is true  ) reload by url
+    * if useUrl is false ) reload by param data
     */
-    submit(){
-        Http.get(`${this._url}`).then((res) => {
-            if (res['httpStatus'] === 200) {
-                const data = res.message.map((item, index) => ({...item, index: index + 1}))
-                this._table.replaceData(data)
-            }
-        })
+    submit(localData = []){
+        if(this._useUrl) {
+            Http.get(`${this._url}`).then((res) => {
+                if (res['httpStatus'] === 200) {
+                    const data = res.message.map((item, index) => ({...item, index: index + 1}))
+                    this._table.replaceData(data)
+                }
+            })
+        } else {
+            this._data = localData
+            this._table.replaceData(localData)
+        }
     }
 
     /*
@@ -50,10 +73,30 @@ class Table {
     }
 
     /*
+    * set placeholder
+    */
+    setPlaceholder(msg = "검색결과가 존재하지 않습니다."){
+        this._placeholder = msg
+        return this
+    }
+
+    /*
     * @param: url
+    * use when useUrl is true
     */
     get(url = '') {
-        this._url = url
+        if(this._useUrl) this._url = url
+        else console.error("get의 경우 useUrl이 true인 경우에만 사용이 가능합니다.")
+        return this
+    }
+
+    /*
+    * @param: data[]
+    * use when useUrl is false
+    */
+    setData(data = []){
+        if(!this._useUrl) this._data = data
+        else console.error("setData의 경우 useUrl이 false인 경우에만 사용이 가능합니다.")
         return this
     }
 
@@ -74,14 +117,6 @@ class Table {
     }
 
     /*
-    * @param: data[]
-    */
-    setData(data = []){
-        this._data = data
-        return this
-    }
-
-    /*
     * @param: layout
     * - default: fitDataFill
     */
@@ -94,12 +129,23 @@ class Table {
     * rowClick: rowClick use
     */
     rowClick(callback) {
-        this._rowClick = callback
+        if(this._rowClickAble) this._rowClick = callback
+        else console.error("행 클릭 가능 여부가 false입니다.")
+        return this
+    }
+
+    /*
+    * rowClickAble change
+    * - default: true
+    * */
+    disAbleRowClickAble(){
+        this._rowClickAble = false
         return this
     }
 
     /*
     * rowFormatter: rowFormatter use
+    * - can get data, element of row
     */
     rowFormatter(callback) {
         this._rowFormatter = callback
@@ -110,14 +156,23 @@ class Table {
     * afterComplete: settings after draw table
     */
     afterComplete(callback) {
-        this._afterComplete = callback
+        if(this._afterCompleteAble) this._afterComplete = callback
+        else console.error("afterComplete 여부가 false이기 때문에 afterComplete사용이 불가능합니다.")
         return this
     }
 
     /*
-    * @param: val
+    * afterCompleteAble change
+    * - default: true
+    * */
+    disableAfterComplete(){
+        this._afterCompleteAble = false
+        return this
+    }
+
+    /*
+    * cab resize column
     * - default: false
-    * - can resize column
     * */
     resizeable(){
         this._resizeable = true
@@ -167,8 +222,8 @@ class Table {
 
     /*
     * draw table
-    * - subTable : use data[] and draw
-    * - table : get data and draw
+    * if useUrl is true  ) init table by url
+    * if useUrl is false ) init table by local data
     */
     init() {
         if(!this._useUrl) {
@@ -235,7 +290,7 @@ class Table {
         const table = new Tabulator(dom, option)
 
         // if clicking row not null
-        if(this._rowClick) {
+        if(this._rowClickAble) {
             table.on('rowClick', (e, row) => {
                 if(!e.target.classList.contains("tabulator-checkbox") && !e.target.classList.contains("select")) {
                     this._rowClick(row.getData(), row._row)
@@ -244,7 +299,7 @@ class Table {
         }
 
         // if after complete not null
-        if(this._afterComplete) {
+        if(this._afterCompleteAble) {
             table.on("renderComplete", () => this._afterComplete())
         }
 
