@@ -14,12 +14,14 @@ public class HongPostWithAnswerVO {
     private Long id;
     private String title;
     private String content;
+    private String delYn;
     private List<HongAnswerVO> answers = new ArrayList<>();
 
     public HongPostWithAnswerVO(HongPost hongPost, List<HongAnswerVO> answers) {
         this.id = hongPost.getId();
         this.title = hongPost.getTitle();
         this.content = hongPost.getContent();
+        this.delYn = hongPost.getDelYn();
         this.answers = answers;
     }
 }

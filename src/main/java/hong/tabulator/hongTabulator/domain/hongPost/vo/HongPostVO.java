@@ -10,10 +10,12 @@ public class HongPostVO {
     private Long id;
     private String title;
     private String content;
+    private String delYn;
 
     public HongPostVO(HongPost hongPost) {
         this.id = hongPost.getId();
         this.title = hongPost.getTitle();
         this.content = hongPost.getContent();
+        this.delYn = hongPost.getDelYn();
     }
 }

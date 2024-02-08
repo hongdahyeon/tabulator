@@ -67,13 +67,13 @@ public class HongPostServiceImpl implements HongPostService {
 
     @Override
     public List<HongPostVO> list() {
-        List<HongPost> hongPosts = hongPostRepository.findAllByDelYnIs("N");
+        List<HongPost> hongPosts = hongPostRepository.findAll();
         return hongPosts.stream().map(HongPostVO::new).toList();
     }
 
     @Override
     public List<HongPostWithAnswerVO> listWithAnswer() {
-        List<HongPost> hongPosts = hongPostRepository.findAllByDelYnIs("N");
+        List<HongPost> hongPosts = hongPostRepository.findAll();
         return hongPosts.stream().map(hongPost -> {
             List<HongAnswerVO> answers = hongAnswerService.list(hongPost.getId());
             return new HongPostWithAnswerVO(hongPost, answers);

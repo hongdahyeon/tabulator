@@ -35,6 +35,11 @@
             .selectable()
             .add(new Column("index").title("#").width("15%").center())
             .add(new Column("title").title("제목").width("30%"))
+            .add(new Column("delYn").title("삭제여부").width("20%").center().formatter(function(cell) {
+                const rowData = cell.getData()
+                if(rowData['delYn'] === 'Y') return `<span style="color: red">삭제됨</span>`
+                else return `<span style="color: blue">삭제안됨</span>`
+            }))
             .add(new Column("answers").title("답변").width("20%").center().formatter(function (cell) {
                 return `<b>${cell.getData().answers.length}개</b>`
             }))
