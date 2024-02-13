@@ -76,3 +76,41 @@ table
 5.  formatter: 앞선 방식과 같이 cell로 값을 받고, cell.getData()를 통해 해당 row의 데이터값을 받아와서 커스터마이징 한 뒤, return 해준다.
  
 __** 필수값: #필드명__
+
+---
+
+#### * 사용방법 (5) : 핸들링
+
+-> 다음 부분의 경우 url을 통해 데이터를 호출하거나, local 데이터를 이용하거나 동일하다.
+
+1. row 클릭 이벤트
+```js
+table
+  .rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)  // 해당 row클릭에 대한 클릭 이벤트를 설정할 수 있다.
+```
+
+<br/>
+
+2. selectable
+
+* 테이블의 row 셀렉트 가능 여부를 true로 변경한다. (default: false)
+
+```js
+table
+  .selectable()   // 다음과 같이 할 경우, selectable이 true로 변경된다. (기본값: false)
+```
+```js
+const selectRows = table.getSelectedRows()
+```
+  -> 위와 같이 테이블의 selectable을 true로 변경하면 다음과 같이 선택된 row에 대한 데이터 리스트를 반환받을 수 있다.
+
+<br/>
+
+3. selectAll / deSelectAll
+
+  -> selectable이 true인 경우에만사용 가능하다. (false인 경우 error)
+
+```js
+$("#all-btn-chk").on('click', () => table.selectAll())        // 테이블 row 전체 선택
+$("#all-btn-nonChk").on('click', () => table.deSelectAll())   // 테이블 row 전체 선택 해제
+```
