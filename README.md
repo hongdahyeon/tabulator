@@ -73,7 +73,7 @@ table
 2.  #컬럼제목: 화면상의 테이블에서 적혀질 컬럼제목명이라고 보면 된다.
 3.  width: 해당 컬럼 가로 폭 길이를 정한다.
 4.  center/left/right: 해당 컬럼속 데이터들의 정렬 위치를 정한다.
-5.  formatter: 앞선 방식과 같이 cell로 값을 받고, cell.getData()를 통해 해당 row의 데이터값을 받아와서 커스터마이징 한 뒤, return 해준다.
+5.  formatter: 앞선 방식과 같이 cell로 값을 받고, cell.getData()를 통해 해당 행(가로줄)의 데이터값을 받아와서 커스터마이징 한 뒤, return 해준다.
  
 __** 필수값: #필드명__
 
@@ -83,17 +83,19 @@ __** 필수값: #필드명__
 
 -> 다음 부분의 경우 url을 통해 데이터를 호출하거나, local 데이터를 이용하거나 동일하다.
 
-### 1. row 클릭 이벤트
+<br/>
+
+### 1. 행클릭 이벤트
 ```js
 table
-  .rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)  // 해당 row클릭에 대한 클릭 이벤트를 설정할 수 있다.
+  .rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)  // 해당 행(가로줄)클릭에 대한 클릭 이벤트를 설정할 수 있다.
 ```
 
 <br/>
 
 ### 2. selectable
 
-* 테이블의 row 셀렉트 가능 여부를 true로 변경한다. (default: false)
+* 테이블의 행(가로줄) 셀렉트 가능 여부를 true로 변경한다. (default: false)
 
 ```js
 table
@@ -102,15 +104,84 @@ table
 ```js
 const selectRows = table.getSelectedRows()
 ```
-  -> 위와 같이 테이블의 selectable을 true로 변경하면 다음과 같이 선택된 row에 대한 데이터 리스트를 반환받을 수 있다.
+  -> 위와 같이 테이블의 selectable을 true로 변경하면 다음과 같이 선택된 행(가로줄)에 대한 데이터 리스트를 반환받을 수 있다.
 
 <br/>
 
 ### 3. selectAll / deSelectAll
 
-  -> selectable이 true인 경우에만사용 가능하다. (false인 경우 error)
+* selectable이 true인 경우에만사용 가능하다. (false인 경우 error)
 
 ```js
-$("#all-btn-chk").on('click', () => table.selectAll())        // 테이블 row 전체 선택
-$("#all-btn-nonChk").on('click', () => table.deSelectAll())   // 테이블 row 전체 선택 해제
+$("#all-btn-chk").on('click', () => table.selectAll())        // 테이블 행 전체 선택
+$("#all-btn-nonChk").on('click', () => table.deSelectAll())   // 테이블 행 전체 선택 해제
+```
+
+<br/>
+
+### 4. rowFormatter
+
+* 해당 행(가로줄)에 대한 커스터마이징이 가능하다.
+
+```js
+/* example */
+table
+  .rowFormatter((row) => {
+      console.log('row: ', row.getData())                     // 해당 row 데이터 가져오기
+      console.log('row: ', row.getElement())                  // 해당 row element 가져오기
+      row.getElement().style.backgroundColor = "#e0b4b4";     // -> 다음과 같이 커스터마이징 가능 => 다음과 같이 하게 될 경우 행의 배경색이 '#e0b4b4' 색으로 변경된다.
+  })
+```
+
+<br/>
+
+### 5. afterComplete
+
+* 테이블이 그려진 뒤 바로 수행될 작업을 선언한다.
+
+```js
+table
+  .afterComplete(() => {
+      console.log("table is completely drawn !")
+  })
+```
+-> 테이블이 그려진 직후 바로 해당 콘솔이 출력된다.
+
+<br/>
+
+### 6. setPlaceholder
+
+* 데이터가 0건일 경우 테이블에 뜨는 placeholder message를 변경할 수 있다.
+
+* 기본값: "검색결과가 존재하지 않습니다."
+
+  ```js
+  table
+    .setPlaceholder("데이터가 0건입니다.")
+  ```
+
+<br/>
+
+### 7. resizeable
+
+* 행 크기를 줄이거나 늘릴 수 있도록 한다. (기본값: false)
+
+* 기본적으로는 행 크기 조절이 안된다.
+
+```js
+table
+  .resizeable()
+```
+
+<br/>
+
+### 8. changeLayout
+
+* 테이블의 layout을 변경할 수 있다. (기본값: fitDataFill)
+
+* 종류: fitData / fitDataStretch / fitDataTable / fitColumns / fitDataFill
+
+```js
+table
+  .changeLayout("fitDataStretch")
 ```
