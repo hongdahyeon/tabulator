@@ -4,7 +4,7 @@
 
 ----
 
-#### * 사용방법 (1) : html 선언
+### * 사용방법 (1) : html 선언
 
 ```html
 <div id="table-id"></div>
@@ -13,7 +13,7 @@
 
 ---
 
-#### * 사용방법 (2) : 객체 생성
+### * 사용방법 (2) : 객체 생성
 
 (1) url을 통한 데이터 호출
 
@@ -31,7 +31,7 @@ const table = new Table("table-id", false)
 
 ---
 
-#### * 사용방법 (3) : 데이터 호출 및 set
+### * 사용방법 (3) : 데이터 호출 및 set
 
 (1) url을 통한 데이터 호출
 
@@ -55,7 +55,7 @@ table
 
 ---
 
-#### * 사용방법 (4) : 컬럼추가
+### * 사용방법 (4) : 컬럼추가
 
 -> 다음 부분의 경우 url을 통해 데이터를 호출하거나, local 데이터를 이용하거나 동일하다.
 
@@ -79,11 +79,11 @@ __** 필수값: #필드명__
 
 ---
 
-#### * 사용방법 (5) : 핸들링
+### * 사용방법 (5) : 핸들링
 
 -> 다음 부분의 경우 url을 통해 데이터를 호출하거나, local 데이터를 이용하거나 동일하다.
 
-1. row 클릭 이벤트
+### 1. row 클릭 이벤트
 ```js
 table
   .rowClick((data, row) => window.location.href = `/post/view/${data['id']}`)  // 해당 row클릭에 대한 클릭 이벤트를 설정할 수 있다.
@@ -91,7 +91,7 @@ table
 
 <br/>
 
-2. selectable
+### 2. selectable
 
 * 테이블의 row 셀렉트 가능 여부를 true로 변경한다. (default: false)
 
@@ -106,7 +106,7 @@ const selectRows = table.getSelectedRows()
 
 <br/>
 
-3. selectAll / deSelectAll
+### 3. selectAll / deSelectAll
 
   -> selectable이 true인 경우에만사용 가능하다. (false인 경우 error)
 
