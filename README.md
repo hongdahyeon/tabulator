@@ -272,3 +272,19 @@ table
   .headerBottom()
 ```
 ![image](https://github.com/hongdahyeon/tabulator/assets/113295805/5f597ca5-9c72-42e7-8b30-e29c1500e54e)
+
+
+---
+
+### * 사용방법 (6) : 최종적으로 초기화
+
+* 마지막으로 init을 통해 초기화를 해야 테이블이 그려진다.
+
+```js
+table
+ ...        // 다양한 작업들을
+ ...        // init 전에 모두 수행한다.
+ .init()    // -> 마지막으로 init을 통해 테이블을 그려준다.
+```
+
+
