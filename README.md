@@ -174,18 +174,7 @@ const selectRows = table.getSelectedRows()
 
 <br/>
 
-### 3. selectAll / deSelectAll
-
-* selectable이 true인 경우에만사용 가능하다. (false인 경우 error)
-
-```js
-$("#all-btn-chk").on('click', () => table.selectAll())        // 테이블 행 전체 선택
-$("#all-btn-nonChk").on('click', () => table.deSelectAll())   // 테이블 행 전체 선택 해제
-```
-
-<br/>
-
-### 4. rowFormatter
+### 3. rowFormatter
 
 * 해당 행(가로줄)에 대한 커스터마이징이 가능하다.
 
@@ -201,7 +190,7 @@ table
 
 <br/>
 
-### 5. afterComplete
+### 4. afterComplete
 
 * 테이블이 그려진 뒤 바로 수행될 작업을 선언한다.
 
@@ -215,7 +204,7 @@ table
 
 <br/>
 
-### 6. setPlaceholder
+### 5. setPlaceholder
 
 * 데이터가 0건일 경우 테이블에 뜨는 placeholder message를 변경할 수 있다.
 
@@ -228,7 +217,7 @@ table
 
 <br/>
 
-### 7. resizeable
+### 6. resizeable
 
 * 행 크기를 줄이거나 늘릴 수 있도록 한다. (기본값: false)
 
@@ -241,7 +230,7 @@ table
 
 <br/>
 
-### 8. changeLayout
+### 7. changeLayout
 
 * 테이블의 layout을 변경할 수 있다. (기본값: fitDataFill)
 
@@ -254,7 +243,7 @@ table
 
 <br/>
 
-### 9. 헤더 title위치
+### 8. 헤더 title위치
 
 * 다음의 경우, 4-2를 적용했을때만 사용 가능하다.
 
@@ -287,4 +276,57 @@ table
  .init()    // -> 마지막으로 init을 통해 테이블을 그려준다.
 ```
 
+---
 
+### * 사용방법 (7) : 메소드
+
+### 1. selectAll / deSelectAll
+
+* selectable이 true인 경우에만사용 가능하다. (false인 경우 error)
+
+```js
+$("#all-btn-chk").on('click', () => table.selectAll())        // 테이블 행 전체 선택
+$("#all-btn-nonChk").on('click', () => table.deSelectAll())   // 테이블 행 전체 선택 해제
+```
+
+<br/>
+
+### 2. addData
+
+* local 데이터를 이용하는 경우에만 사용이 가능하다. (useUrl이 false인 경우)
+
+```js
+const list = [{title: "제목", name: "이름"}]
+table
+    .setPlaceholder("데이터가 0건입니다.")
+    .setData(list)
+    .add(new Column("index").title("#").width("15%").center())
+    .add(new Column("title").title("제목").width("30%").left())
+    .add(new Column("delYn").title("삭제여부").width("20%").center().formatter(function(cell) {
+      const rowData = cell.getData()
+      if(rowData['delYn'] === 'Y') return `<span style="color: red">삭제됨</span>`
+      else return `<span style="color: blue">삭제안됨</span>`
+    }))
+    .init()
+
+$("#add-btn").on('click', () => {
+    const title = $("#title"); const name = $("#name")
+    table.addData({title: title.val(), name: name.val()})   /// addData를 통해 행 추가 가능하다.
+})
+```
+
+
+### 3. submit
+
+```js
+/* (1) useUrl is true */
+table.submit()
+
+/* (2) useUrl is false */
+const submitData = [ ... ]
+table.submit(submitData)
+```
+
+->  현재, (1)에 대해서는 검색파람으로 변경할 예정이다.
+
+-> (2)의 경우 local 데이터를 이용하는 경우에만 사용이 가능하다. 빈 배열을 보내서 초기화할수도 있고 아예 새로운 리스트 데이터를 보내서 테이블 데이터를 변경할 수도 있다.
