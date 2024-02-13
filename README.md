@@ -18,13 +18,13 @@
 (1) url을 통한 데이터 호출
 
 ```js
-const table = new Table("tabulator-table")
+const table = new Table("table-id")
 // 따로 param2에 값을 안줄 경우 (param2 : useUrl : default is true) , url을 통한 직접 데이터 호출
 ```
 
 (2) local 데이터 이용
 ```js
-const table = new Table("tabulator-table", false)
+const table = new Table("table-id", false)
 // param2: useUrl 여부 (기본값: true)
 // -> useUrl이 false일 경우 local 데이터 이용으로 변경됨
 ```
