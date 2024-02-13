@@ -176,6 +176,14 @@ class Table {
     }
 
     /*
+     * header middle
+     * */
+    headerMiddle(){
+        this._columnHeaderVertAlign = "middle"
+        return this
+    }
+
+    /*
     * deselect all row
     */
     deSelectAll(){

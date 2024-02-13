@@ -7,6 +7,7 @@ import hong.tabulator.hongTabulator.domain.hongPost.HongPostRepository;
 import hong.tabulator.hongTabulator.domain.hongPost.HongPostService;
 import hong.tabulator.hongTabulator.domain.hongPost.dto.HongPostDTO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostVO;
+import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAddressVO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAnswerVO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.io.FileUtils;
@@ -78,6 +79,12 @@ public class HongPostServiceImpl implements HongPostService {
             List<HongAnswerVO> answers = hongAnswerService.list(hongPost.getId());
             return new HongPostWithAnswerVO(hongPost, answers);
         }).toList();
+    }
+
+    @Override
+    public List<HongPostWithAddressVO> listWithAddress() {
+        List<HongPost> hongPosts = hongPostRepository.findAll();
+        return hongPosts.stream().map(HongPostWithAddressVO::new).toList();
     }
 
     @Override

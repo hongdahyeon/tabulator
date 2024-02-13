@@ -2,6 +2,7 @@ package hong.tabulator.hongTabulator.domain.hongPost;
 
 import hong.tabulator.hongTabulator.domain.hongPost.dto.HongPostDTO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostVO;
+import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAddressVO;
 import hong.tabulator.hongTabulator.domain.hongPost.vo.HongPostWithAnswerVO;
 import hong.tabulator.hongTabulator.global.response.Response;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,12 @@ public class HongPostRestController {
     @GetMapping("/post")
     public Response list() {
         List<HongPostVO> list = hongPostService.list();
+        return Response.ok(list);
+    }
+
+    @GetMapping("/post-address")
+    public Response listWithAddress() {
+        List<HongPostWithAddressVO> list = hongPostService.listWithAddress();
         return Response.ok(list);
     }
 
