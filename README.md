@@ -55,13 +55,13 @@ table
 
 ---
 
-### * 사용방법 (4) : 컬럼추가
+### * 사용방법 (4-1) : 컬럼추가
 
 -> 다음 부분의 경우 url을 통해 데이터를 호출하거나, local 데이터를 이용하거나 동일하다.
 
 ```js
 table
-  .add(new Column(#필드명).title(#컬럼제목).width("20%").center().formatter(function(cell) {
+  .add(new Column(필드명).title(컬럼제목).width("20%").center().formatter(function(cell) {
          const rowData = cell.getData();                  // 'cell.getData()'를 통해 해당 row 데이터를 가져온다.
          // return을 통해 최종적으로 보여질 값을 리턴해준다.
          if(rowData['delYn'] === 'Y') return '<span style="color: red">삭제됨</span>'
@@ -69,13 +69,79 @@ table
    }))
 ```
 
-1.  #필드명: 호출해오는 데이터의 필드명이라고 보면 된다.
-2.  #컬럼제목: 화면상의 테이블에서 적혀질 컬럼제목명이라고 보면 된다.
+1.  필드명: 호출해오는 데이터의 필드명이라고 보면 된다.
+2.  컬럼제목: 화면상의 테이블에서 적혀질 컬럼제목명이라고 보면 된다.
 3.  width: 해당 컬럼 가로 폭 길이를 정한다.
 4.  center/left/right: 해당 컬럼속 데이터들의 정렬 위치를 정한다.
 5.  formatter: 앞선 방식과 같이 cell로 값을 받고, cell.getData()를 통해 해당 행(가로줄)의 데이터값을 받아와서 커스터마이징 한 뒤, return 해준다.
  
 __** 필수값: #필드명__
+
+---
+
+### * 사용방법 (4-2) : 컬럼추가
+
+* 다음 방법은 colspan을 이용해야 할 경우, 즉 cell을 가로로 합병할 경우 필요하다.
+![image](https://github.com/hongdahyeon/tabulator/assets/113295805/6522b8ee-810b-48b7-b1c1-d3569d1fd372)
+
+-> 위의 사진과 같이 컬럼을 선언해야 할 경우에는 다음과 같이 컬럼을 추가한다.
+
+```js
+/*
+* ex data. {... address: {city: 'city1', street: 'street1', zipcode: 'zipcode1'}
+*/
+table
+  .add(new Column().title("주소").width("20%").center()  // 필드명 없는 컬럼 -> 그 하위로 add
+      .add(new Column("address").title("city").width("10%").center().formatter(function(cell) {
+          const data = cell.getData()
+          return `${data['address']['city']}`
+      }))
+      .add(new Column("address").title("street").width("10%").center().formatter(function(cell) {
+          const data = cell.getData()
+          return `${data['address']['street']}`
+      }))
+      .add(new Column("address").title("zipcode").width("10%").center().formatter(function(cell) {
+          const data = cell.getData()
+          return `${data['address']['zipcode']}`
+      }))
+  )
+```
+-> 위의 js 코드를 보게 되면 맨 처음 '주소'를 title로 갖고 있는 Column에 대해서는 필드명이 없다. 그리고 그 뒤로 add를 통해 컬럼을 추가해줌으로써 앞선 그림과 같은 형태로 컬럼명을 선언할 수 있다.
+
+-> '필드명 없는' Column을 add하고 그 뒤로 '계속된 add를 통해' Column객체를 선언하면 colspan처럼 사용이 가능하다.
+
+* 예를 들어, 만일 다음과 같이 코드를 작성하면 
+```js
+table
+.add(new Column().title("주소").width("20%").center()  // 필드명 없는 컬럼 -> 그 하위로 add
+    .add(new Column().title("시도").width("10%").center()  // 필드명 없는 컬럼 -> 그 하위로 add
+        .add(new Column("address").title("시티").width("10%").center().formatter(function(cell) {
+            const data = cell.getData()
+            return `${data['address']['city']}`
+        }))
+        .add(new Column("address").title("스트릿").width("10%").center().formatter(function(cell) {
+            const data = cell.getData()
+            return `${data['address']['street']}`
+        }))
+        .add(new Column("address").title("집코드").width("10%").center().formatter(function(cell) {
+            const data = cell.getData()
+            return `${data['address']['zipcode']}`
+        }))
+    )
+    .add(new Column("address").title("street").width("10%").center().formatter(function(cell) {
+        const data = cell.getData()
+        return `${data['address']['street']}`
+    }))
+    .add(new Column("address").title("zipcode").width("10%").center().formatter(function(cell) {
+        const data = cell.getData()
+        return `${data['address']['zipcode']}`
+    }))
+)
+```
+![image](https://github.com/hongdahyeon/tabulator/assets/113295805/6401c4b3-7017-46b3-831e-4c00d394bdcd)
+
+-> 다음과 같은 테이블 헤더가 나올 것이다.
+
 
 ---
 
@@ -185,3 +251,24 @@ table
 table
   .changeLayout("fitDataStretch")
 ```
+
+<br/>
+
+### 9. 헤더 title위치
+
+* 다음의 경우, 4-2를 적용했을때만 사용 가능하다.
+
+```js
+/* (1) 헤더 title 위치: 중간 */
+table
+  .headerMiddle()
+```
+![image](https://github.com/hongdahyeon/tabulator/assets/113295805/1c1ced2a-deb3-44a6-a302-be6ff7e104f7)
+
+
+```js
+/* (2) 헤더 title 위치: 아래 */
+table
+  .headerBottom()
+```
+![image](https://github.com/hongdahyeon/tabulator/assets/113295805/5f597ca5-9c72-42e7-8b30-e29c1500e54e)
