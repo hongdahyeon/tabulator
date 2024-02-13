@@ -4,7 +4,7 @@
 
 ----
 
-#### * 사용방법 (1)
+#### * 사용방법 (1) : html 선언
 
 ```html
 <div id="table-id"></div>
@@ -13,7 +13,7 @@
 
 ---
 
-#### * 사용방법 (2)
+#### * 사용방법 (2) : 객체 생성
 
 (1) url을 통한 데이터 호출
 
@@ -28,3 +28,26 @@ const table = new Table("table-id", false)
 // param2: useUrl 여부 (기본값: true)
 // -> useUrl이 false일 경우 local 데이터 이용으로 변경됨
 ```
+
+---
+
+#### * 사용방법 (3) : 데이터 호출 및 set
+
+(1) url을 통한 데이터 호출
+
+```js
+table
+  .get('/api/users')
+```
+
+(2) local 데이터 이용
+
+```js
+const list = []
+table
+  .setData(list)
+```
+
+* 만약 객체 생성을 (1)번으로 하고 데이터 호출을 (2)로 하게 되면 error가 뜬다.
+*  만약 객체 생성을 (2)번으로 하고 데이터 호출을 (1)로 하게 되면 error가 뜬다.
+* ∴ 서로 섞어서 사용 불가
