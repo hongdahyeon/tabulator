@@ -20,7 +20,7 @@ logging.level:
 
 hong:
   img:
-    path: 'D:\hongTabulatorFile\'
+    path: 'D:\hongFileDir\hongTabulatorFile\'
   ckImg:
     pattern: '/ckImage/**'
-    path: 'D:/hongTabulatorFile/ckImage/'
+    path: 'D:/hongFileDir/hongTabulatorFile/ckImage/'
